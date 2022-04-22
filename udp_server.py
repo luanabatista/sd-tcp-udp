@@ -75,3 +75,4 @@ while True:
     # Se houver 4 itens (quant de questoes no array de questoes) executa a função handle
     if count_client_requests(address) == len(questions):
         handle(address)
+        

@@ -1,4 +1,3 @@
-from io import BufferedReader
 import socket
 
 # cria o socket
@@ -15,7 +14,7 @@ server.bind((host, porta))
 
 # é possível limitar o número de conexões não aceitas até rejeitar uma nova
 server.listen()
-print(f"Servidor escutando em {host}:{porta}")
+print(f"Servidor escutando em {host}: {porta}")
 
 while True:
     # cria um socket apenas para aceitar comunicação
@@ -36,14 +35,14 @@ while True:
 
     try:
         # tenta abrir o arquivo
-        f = open(nome_arquivo, "rb")
-    except OSError:
-        # se não conseguir, envia uma mensagem de erro pro cliente
+        # se conseguir, lê o arquivo e envia o seu conteúdo para o cliente
+        with open(nome_arquivo, "rb") as file_object:
+            text = file_object.read()
+            client.send(text)
+            
+    except FileNotFoundError:
+        # se não conseguir, envia uma mensagem de erro para o cliente
         client.send("Arquivo nao encontado!".encode())
-    with f:
-        # se conseguir, manda cada linha do arquivo para o cliente
-        for line in f:
-            client.send(line)
 
     #sinaliza para o cliente que a transferencia encerrou
     client.send("tchau".encode())

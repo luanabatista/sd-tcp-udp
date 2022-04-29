@@ -25,14 +25,15 @@ questions.append(Question(4, 4, 'VFVV'))
 
 # Função que recebe o endereço e processa todos os requests deste endereço
 def handle(address):
+     
     for client_request in requests: 
-        if client_request.address == address:
-            # Pega a mensagem do usuário e a atribui em cada uma das variaveis
-            number = int(client_request.message[0]) 
-            alternatives = int(client_request.message[1])
-            answer = str(client_request.message[2])
+        try:
+            if client_request.address == address:
+                # Pega a mensagem do usuário e a atribui em cada uma das variaveis
+                number = int(client_request.message[0]) 
+                alternatives = int(client_request.message[1])
+                answer = str(client_request.message[2])
 
-            try: 
                 # Para cada questão no array de questões uma resposta do usuário é lida e corrigida
                 for question in questions:
                     counter = 0
@@ -52,9 +53,9 @@ def handle(address):
                             counter += 1      
                         server.sendto(f'Questão: {number}; Acertos: {sucesses}; Erros:{errors}'.encode('utf-8'), address)
 
-            except: # Caso não seja possivel corrigir retorna erro para o servidor e para o cliente
-                print(f'Erro ao processar request recebido de: {address}')
-                server.sendto(f"Erro ao processar requisição ({number};{alternatives};{answer})".encode('utf-8'), address)
+        except: # Caso não seja possivel corrigir retorna erro para o servidor e para o cliente
+            print(f'Erro ao processar request recebido de: {address}')
+            server.sendto(f"Erro ao processar requisição {message}".encode('utf-8'), address)
 
 # Função que conta quantas requisições de um determinado cliente existe no array requests
 def count_client_requests(address):
